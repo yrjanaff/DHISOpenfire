@@ -120,7 +120,7 @@ public class DHISMessageRouter
         String dhisURL = "https://yj-dev.dhis2.org/dhis/api/";
         String authStr = username + ":" + password;
         String authEncoded = Base64.encodeBytes( authStr.getBytes() );
-        Sring location = "";
+        String location = "";
         int code = -1;
         String body = "";
         HttpResponseObject hro = null;
