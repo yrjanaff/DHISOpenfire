@@ -150,7 +150,7 @@ public class DHISMessageRouter
         }
 
         catch (SQLException sqle) {
-            log.info("SQLException.... : " + sqle.toString);
+            log.info("SQLException.... : " + sqle.toString());
             location = "";
         }
         finally {
