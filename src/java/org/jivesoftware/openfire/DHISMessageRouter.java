@@ -119,6 +119,7 @@ public class DHISMessageRouter
 
     private String checkConversation( String fromUser, String toUser )
     {
+        log.info("INNI ckeckConversation");
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -149,6 +150,7 @@ public class DHISMessageRouter
         }
 
         catch (SQLException sqle) {
+            log.info("SQLException.... : " + sqle.toString);
             location = "";
         }
         finally {
