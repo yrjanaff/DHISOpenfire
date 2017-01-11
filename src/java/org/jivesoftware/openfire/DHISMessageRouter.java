@@ -1,6 +1,7 @@
 package org.jivesoftware.openfire;
 
 //import org.jivesoftware.openfire.user.*;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,203 +42,241 @@ import org.jivesoftware.openfire.user.*;
 import org.xmpp.packet.JID;
 
 /**
-*@author Yrjan Fraschetti
-*/
+ * @author Yrjan Fraschetti
+ */
 
-public class DHISMessageRouter{
-	private static final Logger log = LoggerFactory.getLogger(DHISMessageRouter.class);
+public class DHISMessageRouter
+{
+    private static final Logger log = LoggerFactory.getLogger( DHISMessageRouter.class );
 
-	private Message packet;
+    private Message packet;
 
-	private static final String LOAD_PASSWORD =
-	            "SELECT plainPassword,encryptedPassword FROM ofuser WHERE username=?";
+    private static final String LOAD_PASSWORD =
+        "SELECT plainPassword,encryptedPassword FROM ofuser WHERE username=?";
 
-	public DHISMessageRouter(Message packet){
-		this.packet = packet;
-	}
+    public DHISMessageRouter( Message packet )
+    {
+        this.packet = packet;
+    }
 
-	public void sendMessageToDhis(){
-		//Div tester her
-		String username = packet.getFrom().toBareJID();
-		String password = "";
-		String toUser = "";
-		String toPassword = "";
-		log.info("Inside DHISMessageRouter!!!! Message packet will follow:");
-		log.info("Body: " + packet.getBody() + " From: " + packet.getFrom().toBareJID() + " To: " + packet.getTo().toBareJID());
-		
-		username = removeHostFromUsername(username);
-		toUser = removeHostFromUsername(packet.getTo().toBareJID());
+    public void sendMessageToDhis()
+    {
+        //Div tester her
+        String username = packet.getFrom().toBareJID();
+        String password = "";
+        String toUser = "";
+        String toPassword = "";
+        log.info( "Inside DHISMessageRouter!!!! Message packet will follow:" );
+        log.info( "Body: " + packet.getBody() + " From: " + packet.getFrom().toBareJID() + " To: " + packet.getTo().toBareJID() );
 
-		log.info("Fetching password for users");
-		try{
-		    password = getPassword(username);
-		    toPassword = getPassword(toUser);
-		}
-		catch(UserNotFoundException unfe){
-		    log.info("UserNotfoundException.....");
-		}
+        username = removeHostFromUsername( username );
+        toUser = removeHostFromUsername( packet.getTo().toBareJID() );
 
-		//Get id of toUser
-		HttpResponseObject response = dhisHttpRequest("me?fields=id", toUser, toPassword, "GET", null);
-		String toID = "";
-		if(response.getCode() == 200){
-			toID = response.getBody();
-			int index = toID.indexOf(":") + 2;
-			toID = toID.substring(index, toID.length() - 3); 
-		}
-		log.info("ID for user: " + toUser);
-		log.info(toID);
+        log.info( "Fetching password for users" );
+        try
+        {
+            password = getPassword( username );
+            toPassword = getPassword( toUser );
+        }
+        catch ( UserNotFoundException unfe )
+        {
+            log.info( "UserNotfoundException....." );
+        }
+
+        //Get id of toUser
+        HttpResponseObject response = dhisHttpRequest( "me?fields=id", toUser, toPassword, "GET", null );
+        String toID = "";
+        if ( response.getCode() == 200 )
+        {
+            toID = response.getBody();
+            int index = toID.indexOf( ":" ) + 2;
+            toID = toID.substring( index, toID.length() - 3 );
+        }
+        log.info( "ID for user: " + toUser );
+        log.info( toID );
 
         //Build message in JSON format to send to DHIS 2 server
-		String jsonBody = dhisMessage(packet.getBody(), toID);
-        log.info(jsonBody);
+        String jsonBody = dhisMessage( packet.getBody(), toID );
+        log.info( jsonBody );
 
         //Send message to DHIS 2
-        log.info("Sending message to DHIS2!");
-        HttpResponseObject messageResponse = dhisHttpRequest("messageConversations", username, password, "POST", jsonBody);
-        log.info("Message sent. ResponseCode: " + messageResponse.getCode());
-        log.info("Body: " + messageResponse.getBody());
+        log.info( "Sending message to DHIS2!" );
+        HttpResponseObject messageResponse = dhisHttpRequest( "messageConversations", username, password, "POST", jsonBody );
+        log.info( "Message sent. ResponseCode: " + messageResponse.getCode() );
+        log.info( "Body: " + messageResponse.getBody() );
 
-	}
+    }
 
-	private String dhisMessage(String message, String toID){
-		String subject = "\"subject\"";
-		String text = "text";
-		String users = "users";
-		return "{\"subject\": \" \",\"text\": \"" + message + "\",\"users\": [{\"id\": \"" + toID +"\"}]}";
-	}
+    private String dhisMessage( String message, String toID )
+    {
+        String subject = "\"subject\"";
+        String text = "text";
+        String users = "users";
+        return "{\"subject\": \" \",\"text\": \"" + message + "\",\"users\": [{\"id\": \"" + toID + "\"}]}";
+    }
 
-	private HttpResponseObject dhisHttpRequest(String urlE, String username, String password, String requestMethod, String jsonBody){
-		String dhisURL = "https://yj-dev.dhis2.org/dhis/api/";
-		String authStr = username + ":" + password;
-		String authEncoded = Base64.encodeBytes(authStr.getBytes());
-		int code = -1;
-		String body = "";
-		HttpResponseObject hro = null;
-		acceptHost();
+    private HttpResponseObject dhisHttpRequest( String urlE, String username, String password, String requestMethod, String jsonBody )
+    {
+        String dhisURL = "https://yj-dev.dhis2.org/dhis/api/";
+        String authStr = username + ":" + password;
+        String authEncoded = Base64.encodeBytes( authStr.getBytes() );
+        int code = -1;
+        String body = "";
+        HttpResponseObject hro = null;
+        acceptHost();
 
 
-		HttpURLConnection connection = null;
-		try{
-			log.info("Inne i connection try");
-			URL url = new URL(dhisURL + urlE/*"me/?fields=id"*/);
-			log.info("Før connection: url: " + url);
-			connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestProperty("Authorization", "Basic " + authEncoded);
-            connection.setRequestProperty("Accept","application/json");
-            connection.setRequestMethod(requestMethod);
-            connection.setDoInput(true);
-            if(requestMethod.equals("GET") && jsonBody == null){
-                log.info("Inside GET in dhisHttpRequest");
-                connection.setConnectTimeout(1500);
-                connection.setInstanceFollowRedirects(false);
+        HttpURLConnection connection = null;
+        try
+        {
+            log.info( "Inne i connection try" );
+            URL url = new URL( dhisURL + urlE/*"me/?fields=id"*/ );
+            log.info( "Før connection: url: " + url );
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty( "Authorization", "Basic " + authEncoded );
+            connection.setRequestProperty( "Accept", "application/json" );
+            connection.setRequestMethod( requestMethod );
+            connection.setDoInput( true );
+            if ( requestMethod.equals( "GET" ) && jsonBody == null )
+            {
+                log.info( "Inside GET in dhisHttpRequest" );
+                connection.setConnectTimeout( 1500 );
+                connection.setInstanceFollowRedirects( false );
                 connection.connect();
             }
-    
-            if(requestMethod.equals("POST") && jsonBody != null){
-                log.info("Inside POST in dhisHttpRequest");
-		connection.setRequestProperty("Content-Type", "application/json");
-                connection.setConnectTimeout(5000);
-                connection.setDoOutput(true);
+
+            if ( requestMethod.equals( "POST" ) && jsonBody != null )
+            {
+                log.info( "Inside POST in dhisHttpRequest" );
+                connection.setRequestProperty( "Content-Type", "application/json" );
+                connection.setConnectTimeout( 5000 );
+                connection.setDoOutput( true );
                 OutputStream os = connection.getOutputStream();
-                os.write(jsonBody.getBytes());
+                os.write( jsonBody.getBytes() );
                 os.flush();
             }
 
-            log.info("ÅPNET CONNECTION: url- " + url );
+            log.info( "ÅPNET CONNECTION: url- " + url );
 
             code = connection.getResponseCode();
-            body = readInputStream(connection.getInputStream());
+            body = readInputStream( connection.getInputStream() );
 
-            hro = new HttpResponseObject(code, body);
-            log.info("CODE: " + code);
-            log.info("BODY: " + body);
+            hro = new HttpResponseObject( code, body );
+            log.info( "CODE: " + code );
+            log.info( "BODY: " + body );
         }
-        catch (SocketTimeoutException e) {
-            log.info("Socket time out ");
+        catch ( SocketTimeoutException e )
+        {
+            log.info( "Socket time out " );
             e.printStackTrace();
             //return false;
         }
-        catch (MalformedURLException e) {
-            log.info("malformed");
+        catch ( MalformedURLException e )
+        {
+            log.info( "malformed" );
             e.printStackTrace();
             //return false;
-        }catch(AuthenticationException e){
-     		log.info("authentication");
-        	e.printStackTrace();
-        	//return false;
-        	
         }
-        catch (IOException one) {
-			log.info("ioe");
-            log.info(one.toString());
-        	//return false;
-        }catch (Exception e){
+        catch ( AuthenticationException e )
+        {
+            log.info( "authentication" );
             e.printStackTrace();
-        	log.info("excepton");
-        	//return false;
+            //return false;
+
         }
-        finally {
-            log.info("FINNALY");
-            if (connection != null) {
+        catch ( IOException one )
+        {
+            log.info( "ioe" );
+            log.info( one.toString() );
+            //return false;
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+            log.info( "excepton" );
+            //return false;
+        }
+        finally
+        {
+            log.info( "FINNALY" );
+            if ( connection != null )
+            {
                 connection.disconnect();
             }
         }
         return hro;
-	}
+    }
 
-	private String removeHostFromUsername(String username){
-		String un = username;
-		if(un.contains("@")){
-			int index = un.indexOf("@");
-			un = un.substring(0, index); 
-		}
-		return un;
-	}
+    private String removeHostFromUsername( String username )
+    {
+        String un = username;
+        if ( un.contains( "@" ) )
+        {
+            int index = un.indexOf( "@" );
+            un = un.substring( 0, index );
+        }
+        return un;
+    }
 
-	private static void acceptHost() {
+    private static void acceptHost()
+    {
         try
         {
             // Create a trust manager that does not validate certificate chains
-            TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
-                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+            TrustManager[] trustAllCerts = new TrustManager[]{ new X509TrustManager()
+            {
+                public void checkClientTrusted( java.security.cert.X509Certificate[] chain, String authType )
+                {
                 }
 
-                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) {
+                public void checkServerTrusted( java.security.cert.X509Certificate[] chain, String authType )
+                {
                 }
 
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers()
+                {
                     return null;
                 }
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+
+                public void checkClientTrusted( X509Certificate[] certs, String authType )
+                {
                 }
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+
+                public void checkServerTrusted( X509Certificate[] certs, String authType )
+                {
                 }
             }
             };
 
             // Install the all-trusting trust manager
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            SSLContext sc = SSLContext.getInstance( "SSL" );
+            sc.init( null, trustAllCerts, new java.security.SecureRandom() );
+            HttpsURLConnection.setDefaultSSLSocketFactory( sc.getSocketFactory() );
 
             // Create all-trusting host name verifier
-            HostnameVerifier allHostsValid = new HostnameVerifier() {
-                public boolean verify(String hostname, SSLSession session) {
+            HostnameVerifier allHostsValid = new HostnameVerifier()
+            {
+                public boolean verify( String hostname, SSLSession session )
+                {
                     return true;
                 }
             };
 
             // Install the all-trusting host verifier
-            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-        } catch (NoSuchAlgorithmException e) {
+            HttpsURLConnection.setDefaultHostnameVerifier( allHostsValid );
+        }
+        catch ( NoSuchAlgorithmException e )
+        {
             e.printStackTrace();
-        } catch (KeyManagementException e) {
+        }
+        catch ( KeyManagementException e )
+        {
             e.printStackTrace();
         }
     }
 
-	private String getPassword(String username) throws UserNotFoundException {
+    private String getPassword( String username ) throws UserNotFoundException
+    {
         /*if (!supportsPasswordRetrieval()) {
             // Reject the operation since the provider is read-only
             throw new UnsupportedOperationException();
@@ -245,26 +284,32 @@ public class DHISMessageRouter{
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-        if (username.contains("@")) {
+        if ( username.contains( "@" ) )
+        {
             // Check that the specified domain matches the server's domain
-            int index = username.indexOf("@");
-            String domain = username.substring(index + 1);
-            if (domain.equals(XMPPServer.getInstance().getServerInfo().getXMPPDomain())) {
-                username = username.substring(0, index);
-            } else {
+            int index = username.indexOf( "@" );
+            String domain = username.substring( index + 1 );
+            if ( domain.equals( XMPPServer.getInstance().getServerInfo().getXMPPDomain() ) )
+            {
+                username = username.substring( 0, index );
+            }
+            else
+            {
                 // Unknown domain.
                 throw new UserNotFoundException();
             }
         }
-        try {
+        try
+        {
             con = DbConnectionManager.getConnection();
-            pstmt = con.prepareStatement(LOAD_PASSWORD);
-            pstmt.setString(1, username);
+            pstmt = con.prepareStatement( LOAD_PASSWORD );
+            pstmt.setString( 1, username );
             rs = pstmt.executeQuery();
-            if (!rs.next()) {
-                throw new UserNotFoundException(username);
+            if ( !rs.next() )
+            {
+                throw new UserNotFoundException( username );
             }
-            String plainText = rs.getString(1);
+            String plainText = rs.getString( 1 );
             /*String encrypted = rs.getString(2);
             if (encrypted != null) {
                 try {
@@ -274,31 +319,38 @@ public class DHISMessageRouter{
                     // Ignore and return plain password instead.
                 }
             }*/
-            if (plainText == null) {
+            if ( plainText == null )
+            {
                 throw new UnsupportedOperationException();
             }
             return plainText;
         }
-        catch (SQLException sqle) {
-            throw new UserNotFoundException(sqle);
+        catch ( SQLException sqle )
+        {
+            throw new UserNotFoundException( sqle );
         }
-        finally {
-            DbConnectionManager.closeConnection(rs, pstmt, con);
+        finally
+        {
+            DbConnectionManager.closeConnection( rs, pstmt, con );
         }
     }
 
-private String readInputStream(InputStream stream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+    private String readInputStream( InputStream stream ) throws IOException
+    {
+        BufferedReader reader = new BufferedReader( new InputStreamReader( stream ) );
         StringBuilder builder = new StringBuilder();
-        try {
+        try
+        {
             String line;
-            while ((line = reader.readLine()) != null) {
-                builder.append(line);
-                builder.append('\n');
+            while ( (line = reader.readLine()) != null )
+            {
+                builder.append( line );
+                builder.append( '\n' );
             }
             reader.close();
         }
-        catch (IOException e) {
+        catch ( IOException e )
+        {
             e.printStackTrace();
         }
         return builder.toString();
