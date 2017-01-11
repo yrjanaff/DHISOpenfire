@@ -54,6 +54,11 @@ public class DHISMessageRouter
     private static final String LOAD_PASSWORD =
         "SELECT plainPassword,encryptedPassword FROM ofuser WHERE username=?";
 
+    private static final String GET_LOCATION =
+        "SELECT location FROM ofdhisconversations WHERE firstuser=? AND seconduser=?"
+
+
+
     public DHISMessageRouter( Message packet )
     {
         this.packet = packet;
@@ -99,12 +104,55 @@ public class DHISMessageRouter
         String jsonBody = dhisMessage( packet.getBody(), toID );
         log.info( jsonBody );
 
+        //Checking if conversation between the sender and reciever exist
+        String location = checkConversation(username, toUser);
+        log.info("checkConversation returned: " + location);
+
+
         //Send message to DHIS 2
         log.info( "Sending message to DHIS2!" );
         HttpResponseObject messageResponse = dhisHttpRequest( "messageConversations", username, password, "POST", jsonBody );
         log.info( "Message sent. ResponseCode: " + messageResponse.getCode() );
         log.info( "Body: " + messageResponse.getBody() );
 
+    }
+
+    private String checkConversation( String fromUser, String toUser )
+    {
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String location = "";
+
+        try
+        {
+            con = DbConnectionManager.getConnection();
+            pstmt = con.prepareStatement( GET_LOCATION );
+            pstmt.setString( 1, fromUser );
+            pstmt.setString( 2, toUser );
+            rs = pstmt.executeQuery();
+            if ( !rs.next() )
+            {
+                //resetting
+                pstmt = null;
+                rs = null;
+
+                pstmt = con.prepareStatement( GET_LOCATION );
+                pstmt.setString( 1, toUser );
+                pstmt.setString( 2, fromUser );
+                rs = pstmt.executeQuery();
+            }
+
+            location = rs.getString( 1 );
+        }
+
+        catch (SQLException sqle) {
+            location = "";
+        }
+        finally {
+            DbConnectionManager.closeConnection(rs, pstmt, con);
+        }
+        return location;
     }
 
     private String dhisMessage( String message, String toID )

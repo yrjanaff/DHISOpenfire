@@ -2,15 +2,15 @@
  * $RCSfile: MessageRouter.java,v $
  * $Revision: 3007 $
  * $Date: 2005-10-31 13:29:25 -0300 (Mon, 31 Oct 2005) $
- *
+ * <p>
  * Copyright (C) 2005-2008 Jive Software. All rights reserved.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -53,9 +53,10 @@ import org.jivesoftware.openfire.DHISMessageRouter;
  *
  * @author Iain Shigeoka
  */
-public class MessageRouter extends BasicModule {
-	
-	private static Logger log = LoggerFactory.getLogger(MessageRouter.class); 
+public class MessageRouter extends BasicModule
+{
+
+    private static Logger log = LoggerFactory.getLogger( MessageRouter.class );
 
     private OfflineMessageStrategy messageStrategy;
     private RoutingTable routingTable;
@@ -68,8 +69,9 @@ public class MessageRouter extends BasicModule {
     /**
      * Constructs a message router.
      */
-    public MessageRouter() {
-        super("XMPP Message Router");
+    public MessageRouter()
+    {
+        super( "XMPP Message Router" );
     }
 
     /**
@@ -85,117 +87,143 @@ public class MessageRouter extends BasicModule {
      * @param packet The packet to route
      * @throws NullPointerException If the packet is null
      */
-    public void route(Message packet) {
-        if (packet == null) {
+    public void route( Message packet )
+    {
+        if ( packet == null )
+        {
             throw new NullPointerException();
         }
-log.info("Inside MessageRouter!!!! Message packet will follow:");
-log.info("Body: " + packet.getBody() + " From: " + packet.getFrom() + " To: " + packet.getTo());
-if(packet.getBody() != null && packet.getFrom() != null && packet.getTo() != null){
-log.info("sending packet to DHISMessageRouter");
-DHISMessageRouter dmr = new DHISMessageRouter(packet);
-dmr.sendMessageToDhis();	
-}
-        ClientSession session = sessionManager.getSession(packet.getFrom());
+        log.info( "Inside MessageRouter!!!! Message packet will follow:" );
+        log.info( "Body: " + packet.getBody() + " From: " + packet.getFrom() + " To: " + packet.getTo() );
+        if ( packet.getBody() != null && packet.getFrom() != null && packet.getTo() != null )
+        {
+            if(!packet.getFrom().contains("@conference") && !packet.getTo().contains("@conference"))
+            {
+                log.info( "sending packet to DHISMessageRouter" );
+                DHISMessageRouter dmr = new DHISMessageRouter( packet );
+                dmr.sendMessageToDhis();
+            }
+        }
+        ClientSession session = sessionManager.getSession( packet.getFrom() );
 
-        try {
+        try
+        {
             // Invoke the interceptors before we process the read packet
-            InterceptorManager.getInstance().invokeInterceptors(packet, session, true, false);
-            if (session == null || session.getStatus() == Session.STATUS_AUTHENTICATED) {
+            InterceptorManager.getInstance().invokeInterceptors( packet, session, true, false );
+            if ( session == null || session.getStatus() == Session.STATUS_AUTHENTICATED )
+            {
                 JID recipientJID = packet.getTo();
 
                 // If the server receives a message stanza with no 'to' attribute, it MUST treat the message as if the 'to' address were the bare JID <localpart@domainpart> of the sending entity.
-                if (recipientJID == null) {
+                if ( recipientJID == null )
+                {
                     recipientJID = packet.getFrom().asBareJID();
                 }
 
                 // Check if the message was sent to the server hostname
-                if (recipientJID.getNode() == null && recipientJID.getResource() == null &&
-                        serverName.equals(recipientJID.getDomain())) {
-                    if (packet.getElement().element("addresses") != null) {
+                if ( recipientJID.getNode() == null && recipientJID.getResource() == null &&
+                    serverName.equals( recipientJID.getDomain() ) )
+                {
+                    if ( packet.getElement().element( "addresses" ) != null )
+                    {
                         // Message includes multicast processing instructions. Ask the multicastRouter
                         // to route this packet
-                        multicastRouter.route(packet);
+                        multicastRouter.route( packet );
                     }
-                    else {
+                    else
+                    {
                         // Message was sent to the server hostname so forward it to a configurable
                         // set of JID's (probably admin users)
-                        sendMessageToAdmins(packet);
+                        sendMessageToAdmins( packet );
                     }
                     return;
                 }
 
                 boolean isAcceptable = true;
-                if (session instanceof LocalClientSession) {
+                if ( session instanceof LocalClientSession )
+                {
                     // Check if we could process messages from the recipient.
                     // If not, return a not-acceptable error as per XEP-0016:
                     // If the user attempts to send an outbound stanza to a contact and that stanza type is blocked, the user's server MUST NOT route the stanza to the contact but instead MUST return a <not-acceptable/> error
                     Message dummyMessage = packet.createCopy();
-                    dummyMessage.setFrom(packet.getTo());
-                    dummyMessage.setTo(packet.getFrom());
-                    if (!((LocalClientSession) session).canProcess(dummyMessage)) {
-                        packet.setTo(session.getAddress());
-                        packet.setFrom((JID)null);
-                        packet.setError(PacketError.Condition.not_acceptable);
-                        session.process(packet);
+                    dummyMessage.setFrom( packet.getTo() );
+                    dummyMessage.setTo( packet.getFrom() );
+                    if ( !((LocalClientSession) session).canProcess( dummyMessage ) )
+                    {
+                        packet.setTo( session.getAddress() );
+                        packet.setFrom( (JID) null );
+                        packet.setError( PacketError.Condition.not_acceptable );
+                        session.process( packet );
                         isAcceptable = false;
                     }
                 }
-                if (isAcceptable) {
-                    boolean isPrivate = packet.getElement().element(QName.get("private", "urn:xmpp:carbons:2")) != null;
-                    try {
+                if ( isAcceptable )
+                {
+                    boolean isPrivate = packet.getElement().element( QName.get( "private", "urn:xmpp:carbons:2" ) ) != null;
+                    try
+                    {
                         // Deliver stanza to requested route
-                        routingTable.routePacket(recipientJID, packet, false);
-                    } catch (Exception e) {
-                        log.error("Failed to route packet: " + packet.toXML(), e);
-                        routingFailed(recipientJID, packet);
+                        routingTable.routePacket( recipientJID, packet, false );
+                    }
+                    catch ( Exception e )
+                    {
+                        log.error( "Failed to route packet: " + packet.toXML(), e );
+                        routingFailed( recipientJID, packet );
                     }
 
                     // Sent carbon copies to other resources of the sender:
                     // When a client sends a <message/> of type "chat"
-                    if (packet.getType() == Message.Type.chat && !isPrivate && session != null) { // && session.isMessageCarbonsEnabled() ??? // must the own session also be carbon enabled?
-                        List<JID> routes = routingTable.getRoutes(packet.getFrom().asBareJID(), null);
-                        for (JID route : routes) {
+                    if ( packet.getType() == Message.Type.chat && !isPrivate && session != null )
+                    { // && session.isMessageCarbonsEnabled() ??? // must the own session also be carbon enabled?
+                        List<JID> routes = routingTable.getRoutes( packet.getFrom().asBareJID(), null );
+                        for ( JID route : routes )
+                        {
                             // The sending server SHOULD NOT send a forwarded copy to the sending full JID if it is a Carbons-enabled resource.
-                            if (!route.equals(session.getAddress())) {
-                                ClientSession clientSession = sessionManager.getSession(route);
-                                if (clientSession != null && clientSession.isMessageCarbonsEnabled()) {
+                            if ( !route.equals( session.getAddress() ) )
+                            {
+                                ClientSession clientSession = sessionManager.getSession( route );
+                                if ( clientSession != null && clientSession.isMessageCarbonsEnabled() )
+                                {
                                     Message message = new Message();
                                     // The wrapping message SHOULD maintain the same 'type' attribute value
-                                    message.setType(packet.getType());
+                                    message.setType( packet.getType() );
                                     // the 'from' attribute MUST be the Carbons-enabled user's bare JID
-                                    message.setFrom(packet.getFrom().asBareJID());
+                                    message.setFrom( packet.getFrom().asBareJID() );
                                     // and the 'to' attribute SHOULD be the full JID of the resource receiving the copy
-                                    message.setTo(route);
+                                    message.setTo( route );
                                     // The content of the wrapping message MUST contain a <sent/> element qualified by the namespace "urn:xmpp:carbons:2", which itself contains a <forwarded/> qualified by the namespace "urn:xmpp:forward:0" that contains the original <message/> stanza.
-                                    message.addExtension(new Sent(new Forwarded(packet)));
-                                    clientSession.process(message);
+                                    message.addExtension( new Sent( new Forwarded( packet ) ) );
+                                    clientSession.process( message );
                                 }
                             }
                         }
                     }
                 }
             }
-            else {
-                packet.setTo(session.getAddress());
-                packet.setFrom((JID)null);
-                packet.setError(PacketError.Condition.not_authorized);
-                session.process(packet);
+            else
+            {
+                packet.setTo( session.getAddress() );
+                packet.setFrom( (JID) null );
+                packet.setError( PacketError.Condition.not_authorized );
+                session.process( packet );
             }
             // Invoke the interceptors after we have processed the read packet
-            InterceptorManager.getInstance().invokeInterceptors(packet, session, true, true);
-        } catch (PacketRejectedException e) {
+            InterceptorManager.getInstance().invokeInterceptors( packet, session, true, true );
+        }
+        catch ( PacketRejectedException e )
+        {
             // An interceptor rejected this packet
-            if (session != null && e.getRejectionMessage() != null && e.getRejectionMessage().trim().length() > 0) {
+            if ( session != null && e.getRejectionMessage() != null && e.getRejectionMessage().trim().length() > 0 )
+            {
                 // A message for the rejection will be sent to the sender of the rejected packet
                 Message reply = new Message();
-                reply.setID(packet.getID());
-                reply.setTo(session.getAddress());
-                reply.setFrom(packet.getTo());
-                reply.setType(packet.getType());
-                reply.setThread(packet.getThread());
-                reply.setBody(e.getRejectionMessage());
-                session.process(reply);
+                reply.setID( packet.getID() );
+                reply.setTo( session.getAddress() );
+                reply.setFrom( packet.getTo() );
+                reply.setType( packet.getType() );
+                reply.setThread( packet.getThread() );
+                reply.setBody( e.getRejectionMessage() );
+                session.process( reply );
             }
         }
     }
@@ -211,37 +239,45 @@ dmr.sendMessageToDhis();
      *
      * @param packet the message to forward.
      */
-    private void sendMessageToAdmins(Message packet) {
-        String jids = JiveGlobals.getProperty("xmpp.forward.admins");
-        if (jids != null && jids.trim().length() > 0) {
+    private void sendMessageToAdmins( Message packet )
+    {
+        String jids = JiveGlobals.getProperty( "xmpp.forward.admins" );
+        if ( jids != null && jids.trim().length() > 0 )
+        {
             // Forward the message to the users specified in the "xmpp.forward.admins" property
-            StringTokenizer tokenizer = new StringTokenizer(jids, ", ");
-            while (tokenizer.hasMoreTokens()) {
+            StringTokenizer tokenizer = new StringTokenizer( jids, ", " );
+            while ( tokenizer.hasMoreTokens() )
+            {
                 String username = tokenizer.nextToken();
                 Message forward = packet.createCopy();
-                if (username.contains("@")) {
+                if ( username.contains( "@" ) )
+                {
                     // Use the specified bare JID address as the target address
-                    forward.setTo(username);
+                    forward.setTo( username );
                 }
-                else {
-                    forward.setTo(username + "@" + serverName);
+                else
+                {
+                    forward.setTo( username + "@" + serverName );
                 }
-                route(forward);
+                route( forward );
             }
         }
-        else {
+        else
+        {
             // Forward the message to the users allowed to log into the admin console
-            for (JID jid : XMPPServer.getInstance().getAdmins()) {
+            for ( JID jid : XMPPServer.getInstance().getAdmins() )
+            {
                 Message forward = packet.createCopy();
-                forward.setTo(jid);
-                route(forward);
+                forward.setTo( jid );
+                route( forward );
             }
         }
     }
 
     @Override
-	public void initialize(XMPPServer server) {
-        super.initialize(server);
+    public void initialize( XMPPServer server )
+    {
+        super.initialize( server );
         messageStrategy = server.getOfflineMessageStrategy();
         routingTable = server.getRoutingTable();
         sessionManager = server.getSessionManager();
@@ -263,12 +299,16 @@ dmr.sendMessageToDhis();
         boolean storeOffline = true;
 
 
-        if ( msg.getType().equals( Message.Type.chat ) && serverName.equals( recipient.getDomain() ) && recipient.getResource() != null ) {
+        if ( msg.getType().equals( Message.Type.chat ) && serverName.equals( recipient.getDomain() ) && recipient.getResource() != null )
+        {
             // Find an existing AVAILABLE session with non-negative priority.
-            for (JID address : routingTable.getRoutes(recipient.asBareJID(), packet.getFrom())) {
-                ClientSession session = routingTable.getClientRoute(address);
-                if (session != null && session.isInitialized()) {
-                    if (session.getPresence().getPriority() >= 1) {
+            for ( JID address : routingTable.getRoutes( recipient.asBareJID(), packet.getFrom() ) )
+            {
+                ClientSession session = routingTable.getClientRoute( address );
+                if ( session != null && session.isInitialized() )
+                {
+                    if ( session.getPresence().getPriority() >= 1 )
+                    {
                         storeOffline = false;
                     }
                 }
