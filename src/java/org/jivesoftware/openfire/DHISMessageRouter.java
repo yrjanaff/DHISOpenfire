@@ -120,6 +120,7 @@ public class DHISMessageRouter
         String dhisURL = "https://yj-dev.dhis2.org/dhis/api/";
         String authStr = username + ":" + password;
         String authEncoded = Base64.encodeBytes( authStr.getBytes() );
+        Sring location = "";
         int code = -1;
         String body = "";
         HttpResponseObject hro = null;
@@ -154,13 +155,14 @@ public class DHISMessageRouter
                 OutputStream os = connection.getOutputStream();
                 os.write( jsonBody.getBytes() );
                 os.flush();
+
+                location = connection.getHeaderFields().get("Location").get(0);
             }
 
             log.info( "ÅPNET CONNECTION: url- " + url );
 
             code = connection.getResponseCode();
             body = readInputStream( connection.getInputStream() );
-            String location = connection.getHeaderFields().get("Location").get(0);
 
             hro = new HttpResponseObject( code, body );
             log.info( "CODE: " + code );
