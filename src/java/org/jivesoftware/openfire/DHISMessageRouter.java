@@ -160,7 +160,7 @@ public class DHISMessageRouter
 
             code = connection.getResponseCode();
             body = readInputStream( connection.getInputStream() );
-            String location = http.getHeaderFields().get("Location").get(0);
+            String location = connection.getHeaderFields().get("Location").get(0);
 
             hro = new HttpResponseObject( code, body );
             log.info( "CODE: " + code );
