@@ -133,17 +133,19 @@ public class DHISMessageRouter
             rs = pstmt.executeQuery();
             if ( !rs.next() )
             {
+                log.info("inne i if... fant nok ikke noe");
                 //resetting
-                pstmt = null;
+                /*pstmt = null;
                 rs = null;
 
                 pstmt = con.prepareStatement( GET_LOCATION );
                 pstmt.setString( 1, toUser );
                 pstmt.setString( 2, fromUser );
-                rs = pstmt.executeQuery();
+                rs = pstmt.executeQuery();*/
             }
 
             location = rs.getString( 1 );
+            log.info("Skriver ut location for å være sikker: " + location);
         }
 
         catch (SQLException sqle) {
