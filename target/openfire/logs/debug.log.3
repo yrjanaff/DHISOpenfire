@@ -1,0 +1,164 @@
+2017.01.09 13:51:35 org.jivesoftware.util.log.util.CommonsLogFactory - Closing statement 2aae9d10 (belonging to connection 5) automatically
+2017.01.09 13:51:56 org.jivesoftware.openfire.user.DefaultUserProvider - Results: 2
+2017.01.09 13:51:56 org.jivesoftware.openfire.user.DefaultUserProvider - getUsers results: admin,test,.
+2017.01.09 13:52:10 org.jivesoftware.openfire.reporting.stats.StatsEngine - Stat: sessions. Last sample: 1483969320. New sample: 1483969920
+2017.01.09 13:52:10 org.jivesoftware.openfire.reporting.stats.StatsEngine - Stat: server_bytes. Last sample: 1483969320. New sample: 1483969920
+2017.01.09 13:52:10 org.jivesoftware.openfire.reporting.stats.StatsEngine - Stat: muc_occupants. Last sample: 1483969320. New sample: 1483969920
+2017.01.09 13:52:10 org.jivesoftware.openfire.reporting.stats.StatsEngine - Stat: proxyTransferRate. Last sample: 1483969320. New sample: 1483969920
+2017.01.09 13:52:10 org.jivesoftware.openfire.reporting.stats.StatsEngine - Stat: conversations. Last sample: 1483969320. New sample: 1483969920
+2017.01.09 13:52:10 org.jivesoftware.openfire.reporting.stats.StatsEngine - Stat: muc_traffic. Last sample: 1483969320. New sample: 1483969920
+2017.01.09 13:52:10 org.jivesoftware.openfire.reporting.stats.StatsEngine - Stat: packet_count. Last sample: 1483969320. New sample: 1483969920
+2017.01.09 13:52:10 org.jivesoftware.openfire.reporting.stats.StatsEngine - Stat: muc_rooms. Last sample: 1483969320. New sample: 1483969920
+2017.01.09 13:52:10 org.jivesoftware.openfire.reporting.stats.StatsEngine - Stat: server_sessions. Last sample: 1483969320. New sample: 1483969920
+2017.01.09 13:52:10 org.jivesoftware.openfire.reporting.stats.StatsEngine - Stat: muc_users. Last sample: 1483969320. New sample: 1483969920
+2017.01.09 13:52:25 org.apache.mina.filter.executor.OrderedThreadPoolExecutor - Adding event SESSION_OPENED to session 2
+Queue : [SESSION_OPENED, ]
+
+2017.01.09 13:52:25 org.apache.mina.core.filterchain.IoFilterEvent - Firing a SESSION_OPENED event for session 2
+2017.01.09 13:52:25 org.apache.mina.core.filterchain.IoFilterEvent - Event SESSION_OPENED has been fired for session 2
+2017.01.09 13:52:25 org.apache.mina.filter.executor.OrderedThreadPoolExecutor - Adding event MESSAGE_RECEIVED to session 2
+Queue : [MESSAGE_RECEIVED, ]
+
+2017.01.09 13:52:25 org.apache.mina.core.filterchain.IoFilterEvent - Firing a MESSAGE_RECEIVED event for session 2
+2017.01.09 13:52:25 org.apache.mina.filter.codec.ProtocolCodecFilter - Processing a MESSAGE_RECEIVED for session 2
+2017.01.09 13:52:25 org.apache.mina.filter.executor.OrderedThreadPoolExecutor - Adding event MESSAGE_SENT to session 2
+Queue : [MESSAGE_SENT, ]
+
+2017.01.09 13:52:25 org.apache.mina.filter.executor.OrderedThreadPoolExecutor - Adding event MESSAGE_SENT to session 2
+Queue : [MESSAGE_SENT, , MESSAGE_SENT, ]
+
+2017.01.09 13:52:25 org.apache.mina.core.filterchain.IoFilterEvent - Event MESSAGE_RECEIVED has been fired for session 2
+2017.01.09 13:52:25 org.apache.mina.core.filterchain.IoFilterEvent - Firing a MESSAGE_SENT event for session 2
+2017.01.09 13:52:25 org.apache.mina.core.filterchain.IoFilterEvent - Event MESSAGE_SENT has been fired for session 2
+2017.01.09 13:52:25 org.apache.mina.core.filterchain.IoFilterEvent - Firing a MESSAGE_SENT event for session 2
+2017.01.09 13:52:25 org.apache.mina.core.filterchain.IoFilterEvent - Event MESSAGE_SENT has been fired for session 2
+2017.01.09 13:52:25 org.apache.mina.filter.executor.OrderedThreadPoolExecutor - Adding event MESSAGE_RECEIVED to session 2
+Queue : [MESSAGE_RECEIVED, ]
+
+2017.01.09 13:52:25 org.apache.mina.core.filterchain.IoFilterEvent - Firing a MESSAGE_RECEIVED event for session 2
+2017.01.09 13:52:25 org.apache.mina.filter.codec.ProtocolCodecFilter - Processing a MESSAGE_RECEIVED for session 2
+2017.01.09 13:52:25 org.jivesoftware.openfire.keystore.OpenfireX509TrustManager - Constructed trust manager. Number of trusted issuers: 163, accepts self-signed: false, checks validity: true
+2017.01.09 13:52:25 org.jivesoftware.openfire.keystore.OpenfireX509TrustManager - Constructed trust manager. Number of trusted issuers: 163, accepts self-signed: false, checks validity: true
+2017.01.09 13:52:25 org.apache.mina.filter.ssl.SslFilter - Adding the SSL Filter tls to the chain
+2017.01.09 13:52:25 org.apache.mina.filter.ssl.SslHandler - Session Server[2](no sslEngine) Initializing the SSL Handler
+2017.01.09 13:52:25 org.apache.mina.filter.ssl.SslHandler - Session Server[2](no sslEngine) SSL Handler Initialization done.
+2017.01.09 13:52:25 org.apache.mina.filter.ssl.SslFilter - Session Server[2](ssl...) : Starting the first handshake
+2017.01.09 13:52:25 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) processing the NEED_UNWRAP state
+2017.01.09 13:52:25 org.apache.mina.filter.ssl.SslFilter - Session Server[2](ssl...): Writing Message : WriteRequest: HeapBuffer[pos=0 lim=50 cap=64: 3C 70 72 6F 63 65 65 64 20 78 6D 6C 6E 73 3D 22...]
+2017.01.09 13:52:25 org.apache.mina.core.filterchain.IoFilterEvent - Event MESSAGE_RECEIVED has been fired for session 2
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](ssl...): Message received : HeapBuffer[pos=0 lim=223 cap=1024: 16 03 03 00 DA 01 00 00 D6 03 03 58 73 95 9A 6C...]
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) Processing the received message
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) processing the NEED_UNWRAP state
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) processing the NEED_TASK state
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) processing the NEED_WRAP state
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](ssl...): Writing Message : WriteRequest: HeapBuffer[pos=0 lim=1212 cap=2115: 16 03 03 04 B7 02 00 00 4D 03 03 58 73 95 9A 43...]
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) processing the NEED_UNWRAP state
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](ssl...): Processing the SSL Data 
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](ssl...): Message received : HeapBuffer[pos=0 lim=75 cap=1024: 16 03 03 00 46 10 00 00 42 41 04 F4 C8 E4 08 27...]
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) Processing the received message
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) processing the NEED_UNWRAP state
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) processing the NEED_TASK state
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) processing the NEED_UNWRAP state
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](ssl...): Processing the SSL Data 
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](ssl...): Message received : HeapBuffer[pos=0 lim=91 cap=512: 14 03 03 00 01 01 16 03 03 00 50 BE 05 83 71 26...]
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) Processing the received message
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) processing the NEED_UNWRAP state
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) processing the NEED_WRAP state
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](ssl...): Writing Message : WriteRequest: HeapBuffer[pos=0 lim=6 cap=8: 14 03 03 00 01 01]
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) processing the NEED_WRAP state
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](ssl...): Writing Message : WriteRequest: HeapBuffer[pos=0 lim=85 cap=132: 16 03 03 00 50 76 D3 D1 78 A6 EA 42 F4 9C B3 4F...]
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](ssl...) processing the FINISHED state
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](SSL) is now secured
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](SSL) processing the FINISHED state
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](SSL) is now secured
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](SSL): Processing the SSL Data 
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](SSL): Message received : HeapBuffer[pos=0 lim=229 cap=512: 17 03 03 00 E0 44 B2 5E 09 8B A0 EB 42 C4 4C 42...]
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](SSL) Processing the received message
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](SSL): Processing the SSL Data 
+2017.01.09 13:52:26 org.apache.mina.filter.executor.OrderedThreadPoolExecutor - Adding event MESSAGE_RECEIVED to session 2
+Queue : [MESSAGE_RECEIVED, ]
+
+2017.01.09 13:52:26 org.apache.mina.core.filterchain.IoFilterEvent - Firing a MESSAGE_RECEIVED event for session 2
+2017.01.09 13:52:26 org.apache.mina.filter.codec.ProtocolCodecFilter - Processing a MESSAGE_RECEIVED for session 2
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](SSL): Writing Message : WriteRequest: HeapBuffer[pos=0 lim=576 cap=1024: 3C 3F 78 6D 6C 20 76 65 72 73 69 6F 6E 3D 27 31...]
+2017.01.09 13:52:26 org.apache.mina.core.filterchain.IoFilterEvent - Event MESSAGE_RECEIVED has been fired for session 2
+2017.01.09 13:52:26 org.apache.mina.filter.executor.OrderedThreadPoolExecutor - Adding event MESSAGE_SENT to session 2
+Queue : [MESSAGE_SENT, ]
+
+2017.01.09 13:52:26 org.apache.mina.core.filterchain.IoFilterEvent - Firing a MESSAGE_SENT event for session 2
+2017.01.09 13:52:26 org.apache.mina.core.filterchain.IoFilterEvent - Event MESSAGE_SENT has been fired for session 2
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](SSL): Message received : HeapBuffer[pos=0 lim=197 cap=256: 17 03 03 00 C0 8C AC CD F1 44 9B 18 8F 58 50 62...]
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslHandler - Session Server[2](SSL) Processing the received message
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](SSL): Processing the SSL Data 
+2017.01.09 13:52:26 org.apache.mina.filter.executor.OrderedThreadPoolExecutor - Adding event MESSAGE_RECEIVED to session 2
+Queue : [MESSAGE_RECEIVED, ]
+
+2017.01.09 13:52:26 org.apache.mina.core.filterchain.IoFilterEvent - Firing a MESSAGE_RECEIVED event for session 2
+2017.01.09 13:52:26 org.apache.mina.filter.codec.ProtocolCodecFilter - Processing a MESSAGE_RECEIVED for session 2
+2017.01.09 13:52:26 org.apache.mina.filter.ssl.SslFilter - Session Server[2](SSL): Writing Message : WriteRequest: HeapBuffer[pos=0 lim=77 cap=128: 3C 66 61 69 6C 75 72 65 20 78 6D 6C 6E 73 3D 22...]
+2017.01.09 13:52:26 org.apache.mina.core.filterchain.IoFilterEvent - Event MESSAGE_RECEIVED has been fired for session 2
+2017.01.09 13:52:26 org.apache.mina.filter.executor.OrderedThreadPoolExecutor - Adding event MESSAGE_SENT to session 2
+Queue : [MESSAGE_SENT, ]
+
+2017.01.09 13:52:26 org.apache.mina.core.filterchain.IoFilterEvent - Firing a MESSAGE_SENT event for session 2
+2017.01.09 13:52:26 org.apache.mina.core.filterchain.IoFilterEvent - Event MESSAGE_SENT has been fired for session 2
+2017.01.09 13:52:28 org.apache.mina.filter.executor.OrderedThreadPoolExecutor - Adding event SESSION_OPENED to session 3
+Queue : [SESSION_OPENED, ]
+
+2017.01.09 13:52:28 org.apache.mina.core.filterchain.IoFilterEvent - Firing a SESSION_OPENED event for session 3
+2017.01.09 13:52:28 org.apache.mina.filter.executor.OrderedThreadPoolExecutor - Adding event MESSAGE_RECEIVED to session 3
+Queue : [MESSAGE_RECEIVED, ]
+
+2017.01.09 13:52:28 org.apache.mina.core.filterchain.IoFilterEvent - Event SESSION_OPENED has been fired for session 3
+2017.01.09 13:52:28 org.apache.mina.core.filterchain.IoFilterEvent - Firing a MESSAGE_RECEIVED event for session 3
+2017.01.09 13:52:28 org.apache.mina.filter.codec.ProtocolCodecFilter - Processing a MESSAGE_RECEIVED for session 3
+2017.01.09 13:52:28 org.apache.mina.core.filterchain.IoFilterEvent - Event MESSAGE_RECEIVED has been fired for session 3
+2017.01.09 13:52:28 org.apache.mina.filter.executor.OrderedThreadPoolExecutor - Adding event MESSAGE_SENT to session 3
+Queue : [MESSAGE_SENT, ]
+
+2017.01.09 13:52:28 org.apache.mina.filter.executor.OrderedThreadPoolExecutor - Adding event MESSAGE_SENT to session 3
+Queue : [MESSAGE_SENT, , MESSAGE_SENT, ]
+
+2017.01.09 13:52:28 org.apache.mina.core.filterchain.IoFilterEvent - Firing a MESSAGE_SENT event for session 3
+2017.01.09 13:52:28 org.apache.mina.core.filterchain.IoFilterEvent - Event MESSAGE_SENT has been fired for session 3
+2017.01.09 13:52:28 org.apache.mina.core.filterchain.IoFilterEvent - Firing a MESSAGE_SENT event for session 3
+2017.01.09 13:52:28 org.apache.mina.core.filterchain.IoFilterEvent - Event MESSAGE_SENT has been fired for session 3
+2017.01.09 13:52:28 org.apache.mina.filter.executor.OrderedThreadPoolExecutor - Adding event MESSAGE_RECEIVED to session 3
+Queue : [MESSAGE_RECEIVED, ]
+
+2017.01.09 13:52:28 org.apache.mina.core.filterchain.IoFilterEvent - Firing a MESSAGE_RECEIVED event for session 3
+2017.01.09 13:52:28 org.apache.mina.filter.codec.ProtocolCodecFilter - Processing a MESSAGE_RECEIVED for session 3
+2017.01.09 13:52:28 org.jivesoftware.openfire.keystore.OpenfireX509TrustManager - Constructed trust manager. Number of trusted issuers: 163, accepts self-signed: false, checks validity: true
+2017.01.09 13:52:28 org.jivesoftware.openfire.keystore.OpenfireX509TrustManager - Constructed trust manager. Number of trusted issuers: 163, accepts self-signed: false, checks validity: true
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslFilter - Adding the SSL Filter tls to the chain
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](no sslEngine) Initializing the SSL Handler
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](no sslEngine) SSL Handler Initialization done.
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslFilter - Session Server[3](ssl...) : Starting the first handshake
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) processing the NEED_UNWRAP state
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslFilter - Session Server[3](ssl...): Writing Message : WriteRequest: HeapBuffer[pos=0 lim=50 cap=64: 3C 70 72 6F 63 65 65 64 20 78 6D 6C 6E 73 3D 22...]
+2017.01.09 13:52:28 org.apache.mina.core.filterchain.IoFilterEvent - Event MESSAGE_RECEIVED has been fired for session 3
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslFilter - Session Server[3](ssl...): Message received : HeapBuffer[pos=0 lim=223 cap=1024: 16 03 03 00 DA 01 00 00 D6 03 03 58 73 95 9C DA...]
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) Processing the received message
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) processing the NEED_UNWRAP state
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) processing the NEED_TASK state
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) processing the NEED_WRAP state
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslFilter - Session Server[3](ssl...): Writing Message : WriteRequest: HeapBuffer[pos=0 lim=1212 cap=2115: 16 03 03 04 B7 02 00 00 4D 03 03 58 73 95 9C F8...]
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) processing the NEED_UNWRAP state
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslFilter - Session Server[3](ssl...): Processing the SSL Data 
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslFilter - Session Server[3](ssl...): Message received : HeapBuffer[pos=0 lim=75 cap=1024: 16 03 03 00 46 10 00 00 42 41 04 CB 8F 9D 95 E5...]
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) Processing the received message
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) processing the NEED_UNWRAP state
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) processing the NEED_TASK state
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) processing the NEED_UNWRAP state
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslFilter - Session Server[3](ssl...): Processing the SSL Data 
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslFilter - Session Server[3](ssl...): Message received : HeapBuffer[pos=0 lim=91 cap=512: 14 03 03 00 01 01 16 03 03 00 50 C5 C5 DB 49 20...]
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) Processing the received message
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) processing the NEED_UNWRAP state
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) processing the NEED_WRAP state
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslFilter - Session Server[3](ssl...): Writing Message : WriteRequest: HeapBuffer[pos=0 lim=6 cap=8: 14 03 03 00 01 01]
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) processing the NEED_WRAP state
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslFilter - Session Server[3](ssl...): Writing Message : WriteRequest: HeapBuffer[pos=0 lim=85 cap=132: 16 03 03 00 50 47 FE CE CE 78 BE 7F 2E C0 C5 AE...]
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](ssl...) processing the FINISHED state
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](SSL) is now secured
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](SSL) processing the FINISHED state
+2017.01.09 13:52:28 org.apache.mina.filter.ssl.SslHandler - Session Server[3](SSL) is now secured

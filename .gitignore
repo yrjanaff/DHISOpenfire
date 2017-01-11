@@ -1,0 +1,13 @@
+.DS_Store
+.bash_history
+.bash_logout
+.bashrc
+.cache/
+.install4j
+.java/
+.oracle_jre_usage/
+.profile
+.psql_history
+.rnd
+.ssh/
+.sudo_as_admin_successful
