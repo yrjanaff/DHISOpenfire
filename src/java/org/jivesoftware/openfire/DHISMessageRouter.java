@@ -160,10 +160,12 @@ public class DHISMessageRouter
 
             code = connection.getResponseCode();
             body = readInputStream( connection.getInputStream() );
+            String location = http.getHeaderFields().get("Location").get(0);
 
             hro = new HttpResponseObject( code, body );
             log.info( "CODE: " + code );
             log.info( "BODY: " + body );
+            log.info( "LOCATION: " + location);
         }
         catch ( SocketTimeoutException e )
         {
