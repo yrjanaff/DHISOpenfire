@@ -97,7 +97,7 @@ public class MessageRouter extends BasicModule
         log.info( "Body: " + packet.getBody() + " From: " + packet.getFrom() + " To: " + packet.getTo() );
         if ( packet.getBody() != null && packet.getFrom() != null && packet.getTo() != null )
         {
-            if(!packet.getFrom().contains("@conference") && !packet.getTo().contains("@conference"))
+            if(!packet.getFrom().toString().contains("@conference") && !packet.getTo().toString().contains("@conference"))
             {
                 log.info( "sending packet to DHISMessageRouter" );
                 DHISMessageRouter dmr = new DHISMessageRouter( packet );
