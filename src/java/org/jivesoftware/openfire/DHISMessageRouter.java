@@ -55,7 +55,7 @@ public class DHISMessageRouter
         "SELECT plainPassword,encryptedPassword FROM ofuser WHERE username=?";
 
     private static final String GET_LOCATION =
-        "SELECT location FROM ofdhisconversations WHERE firstuser=? AND seconduser=?"
+        "SELECT location FROM ofdhisconversations WHERE firstuser=? AND seconduser=?";
 
 
 
