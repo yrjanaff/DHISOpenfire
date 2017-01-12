@@ -117,7 +117,7 @@ public class DHISMessageRouter
         if(!location.equals("")){
             log.info("Sjekker om conversation fortsatt finnes i DHIS");
             HttpResponseObject dhisConversation = dhisHttpRequest( location, username, password, "GET", null );
-            log.info("DHIS sier at conversation er: " + dhisConversation.code());
+            log.info("DHIS sier at conversation er: " + dhisConversation.getCode());
         }
 
         //Send message to DHIS 2
