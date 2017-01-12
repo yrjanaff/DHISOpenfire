@@ -105,9 +105,13 @@ public class DHISMessageRouter
         log.info( jsonBody );
 
         //Checking if conversation between the sender and reciever exist
-        String location = checkConversation(username, toUser);
+        log.info("checkConversation");
+        String location = checkConversation(toUser, username);
+        if(location.equals("")){
+            log.info("location was not found on first try. Swapping usernames and checking again.");
+            location = checkConversation(username, toUser);
+        }
         log.info("checkConversation returned: " + location);
-
 
         //Send message to DHIS 2
         log.info( "Sending message to DHIS2!" );
@@ -132,18 +136,6 @@ public class DHISMessageRouter
             pstmt.setString( 1, toUser );
             pstmt.setString( 2, fromUser );
             rs = pstmt.executeQuery();
-            if ( !rs.next() )
-            {
-                log.info("inne i if... fant nok ikke noe");
-                //resetting
-                pstmt = null;
-                rs = null;
-
-                pstmt = con.prepareStatement( GET_LOCATION );
-                pstmt.setString( 1, toUser );
-                pstmt.setString( 2, fromUser );
-                rs = pstmt.executeQuery();
-            }
 
             location = rs.getString( 1 );
             log.info("Skriver ut location for å være sikker: " + location);
