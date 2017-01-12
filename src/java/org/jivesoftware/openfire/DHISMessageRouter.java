@@ -58,7 +58,7 @@ public class DHISMessageRouter
         "SELECT location FROM ofdhisconversations WHERE firstuser=? AND seconduser=?";
 
     private static final String SET_LOCATION =
-        "INSERT INTO ofdhisconversations VALUES (?, ?. ?)";
+        "INSERT INTO ofdhisconversations VALUES (?, ?, ?)";
 
 
     public DHISMessageRouter( Message packet )
