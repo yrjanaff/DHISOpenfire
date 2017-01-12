@@ -107,7 +107,7 @@ public class DHISMessageRouter
         //Checking if conversation between the sender and reciever exist in db
         log.info("checkConversation");
         String location = checkConversation(toUser, username);
-        String conversationCode = -1;
+        int conversationCode = -1;
         if(location.equals("")){
             log.info("location was not found on first try. Swapping usernames and checking again.");
             location = checkConversation(username, toUser);
@@ -170,7 +170,7 @@ public class DHISMessageRouter
         return location;
     }
 
-    private String dhisMessage( String message, String toID )
+    private String dhisMessage( String message, String toID, username, toUser )
     {
         return "{\"subject\": \"Chatlog " + username + " / " + toUser + "\",\"text\": \"" + message + "\",\"users\": [{\"id\": \"" + toID + "\"}]}";
     }
