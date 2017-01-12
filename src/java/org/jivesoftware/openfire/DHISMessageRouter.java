@@ -136,7 +136,9 @@ public class DHISMessageRouter
             pstmt.setString( 1, toUser );
             pstmt.setString( 2, fromUser );
             rs = pstmt.executeQuery();
-
+            if( !rs.next() ){
+                log.info("mulig noe skjedde nå?");
+            }
             location = rs.getString( 1 );
             log.info("Skriver ut location for å være sikker: " + location);
         }
