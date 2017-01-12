@@ -73,13 +73,10 @@ public class DHISMessageRouter
         String password = "";
         String toUser = "";
         String toPassword = "";
-        log.info( "Inside DHISMessageRouter!!!! Message packet will follow:" );
-        log.info( "Body: " + packet.getBody() + " From: " + packet.getFrom().toBareJID() + " To: " + packet.getTo().toBareJID() );
 
         username = removeHostFromUsername( username );
         toUser = removeHostFromUsername( packet.getTo().toBareJID() );
 
-        log.info( "Fetching password for users" );
         try
         {
             password = getPassword( username );
@@ -99,48 +96,35 @@ public class DHISMessageRouter
             int index = toID.indexOf( ":" ) + 2;
             toID = toID.substring( index, toID.length() - 3 );
         }
-        log.info( "ID for user: " + toUser );
-        log.info( toID );
 
         //Build message in JSON format to send to DHIS 2 server
         String jsonBody = dhisMessage( packet.getBody(), toID, username, toUser );
-        log.info( jsonBody );
 
         //Checking if conversation between the sender and reciever exist in db
-        log.info( "checkConversation" );
         String location = checkConversation( toUser, username );
         int conversationCode = -1;
         if ( location.equals( "" ) )
         {
-            log.info( "location was not found on first try. Swapping usernames and checking again." );
             location = checkConversation( username, toUser );
         }
-        log.info( "checkConversation returned: " + location );
 
         //Checking if the conversation found in db still exist in DHIS
         if ( !location.equals( "" ) )
         {
-            log.info( "Sjekker om conversation fortsatt finnes i DHIS" );
             HttpResponseObject dhisConversation = dhisHttpRequest( location, username, password, "GET", null );
-            log.info( "DHIS sier at conversation er: " + dhisConversation.getCode() );
             if ( dhisConversation.getCode() == 200 )
             {
                 conversationCode = 200;
-                log.info( "saved conversationCode" );
             }
         }
 
         if ( conversationCode != 200 )
         {
-            log.info( "ConversationCode was not 200, resetting location to messageConversations/" );
             location = "messageConversations/";
         }
 
         //Send message to DHIS 2
-        log.info( "Sending message to DHIS2!" );
         HttpResponseObject messageResponse = dhisHttpRequest( location, username, password, "POST", jsonBody );
-        log.info( "Message sent. ResponseCode: " + messageResponse.getCode() );
-        log.info( "Body: " + messageResponse.getBody() );
 
         //Set location of conversation in DB
         if ( location.equals( "messageConversations/" ) )
@@ -167,10 +151,7 @@ public class DHISMessageRouter
             pstmt.setString( 3, location );
             rs = pstmt.executeQuery();
             if ( !rs.next() )
-            {
-                log.info( "mulig noe skjedde nå?" );
-            }
-            log.info( "Ser om rs skriver ut en insert etter insert: " + rs.getString( 1 ) );
+            { }
         }
 
         catch ( SQLException sqle )
@@ -181,7 +162,6 @@ public class DHISMessageRouter
         {
             DbConnectionManager.closeConnection( rs, pstmt, con );
         }
-        log.info( "Mulig det gikk å lagre location i db!" );
     }
 
     private String checkConversation( String fromUser, String toUser )
@@ -200,11 +180,8 @@ public class DHISMessageRouter
             pstmt.setString( 2, fromUser );
             rs = pstmt.executeQuery();
             if ( !rs.next() )
-            {
-                log.info( "mulig noe skjedde nå?" );
-            }
+            { }
             location = rs.getString( 1 );
-            log.info( "Skriver ut location for å være sikker: " + location );
         }
 
         catch ( SQLException sqle )
@@ -239,9 +216,7 @@ public class DHISMessageRouter
         HttpURLConnection connection = null;
         try
         {
-            log.info( "Inne i connection try" );
             URL url = new URL( dhisURL + urlE/*"me/?fields=id"*/ );
-            log.info( "Før connection: url: " + url );
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty( "Authorization", "Basic " + authEncoded );
             connection.setRequestProperty( "Accept", "application/json" );
@@ -249,7 +224,6 @@ public class DHISMessageRouter
             connection.setDoInput( true );
             if ( requestMethod.equals( "GET" ) && jsonBody == null )
             {
-                log.info( "Inside GET in dhisHttpRequest" );
                 connection.setConnectTimeout( 1500 );
                 connection.setInstanceFollowRedirects( false );
                 connection.connect();
@@ -257,7 +231,6 @@ public class DHISMessageRouter
 
             if ( requestMethod.equals( "POST" ) && jsonBody != null )
             {
-                log.info( "Inside POST in dhisHttpRequest" );
                 connection.setRequestProperty( "Content-Type", "application/json" );
                 connection.setConnectTimeout( 5000 );
                 connection.setDoOutput( true );
@@ -268,15 +241,10 @@ public class DHISMessageRouter
                 location = connection.getHeaderFields().get( "Location" ).get( 0 );
             }
 
-            log.info( "ÅPNET CONNECTION: url- " + url );
-
             code = connection.getResponseCode();
             body = readInputStream( connection.getInputStream() );
 
             hro = new HttpResponseObject( code, body, location );
-            log.info( "CODE: " + code );
-            log.info( "BODY: " + body );
-            log.info( "LOCATION: " + location );
         }
         catch ( SocketTimeoutException e )
         {
@@ -339,12 +307,10 @@ public class DHISMessageRouter
             TrustManager[] trustAllCerts = new TrustManager[]{ new X509TrustManager()
             {
                 public void checkClientTrusted( java.security.cert.X509Certificate[] chain, String authType )
-                {
-                }
+                { }
 
                 public void checkServerTrusted( java.security.cert.X509Certificate[] chain, String authType )
-                {
-                }
+                { }
 
                 public java.security.cert.X509Certificate[] getAcceptedIssuers()
                 {
@@ -352,14 +318,11 @@ public class DHISMessageRouter
                 }
 
                 public void checkClientTrusted( X509Certificate[] certs, String authType )
-                {
-                }
+                { }
 
                 public void checkServerTrusted( X509Certificate[] certs, String authType )
-                {
-                }
-            }
-            };
+                { }
+            } };
 
             // Install the all-trusting trust manager
             SSLContext sc = SSLContext.getInstance( "SSL" );
@@ -390,10 +353,6 @@ public class DHISMessageRouter
 
     private String getPassword( String username ) throws UserNotFoundException
     {
-        /*if (!supportsPasswordRetrieval()) {
-            // Reject the operation since the provider is read-only
-            throw new UnsupportedOperationException();
-        }*/
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -423,15 +382,7 @@ public class DHISMessageRouter
                 throw new UserNotFoundException( username );
             }
             String plainText = rs.getString( 1 );
-            /*String encrypted = rs.getString(2);
-            if (encrypted != null) {
-                try {
-                    return AuthFactory.decryptPassword(encrypted);
-                }
-                catch (UnsupportedOperationException uoe) {
-                    // Ignore and return plain password instead.
-                }
-            }*/
+
             if ( plainText == null )
             {
                 throw new UnsupportedOperationException();
