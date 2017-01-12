@@ -116,7 +116,7 @@ public class DHISMessageRouter
         //Checking if the conversation found in db still exist in DHIS
         if(!location.equals("")){
             log.info("Sjekker om conversation fortsatt finnes i DHIS");
-            HttpResonseObject dhisConversation = dhisHttpRequest( location, username, password, "GET", null );
+            HttpResponseObject dhisConversation = dhisHttpRequest( location, username, password, "GET", null );
             log.info("DHIS sier at conversation er: " + dhisConversation.code());
         }
 
