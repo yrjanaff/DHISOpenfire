@@ -133,7 +133,7 @@ public class DHISMessageRouter
         if ( conversationCode != 200 )
         {
             log.info( "ConversationCode was not 200, resetting location to messageConversations/" );
-            location = "messageConversations";
+            location = "messageConversations/";
         }
 
         //Send message to DHIS 2
@@ -143,7 +143,7 @@ public class DHISMessageRouter
         log.info( "Body: " + messageResponse.getBody() );
 
         //Set location of conversation in DB
-        if ( location.equals( "" ) )
+        if ( location.equals( "messageConversations/" ) )
         {
             setConversation( username, toUser, messageResponse.getLocation() );
         }
