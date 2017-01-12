@@ -170,7 +170,7 @@ public class DHISMessageRouter
         return location;
     }
 
-    private String dhisMessage( String message, String toID, username, toUser )
+    private String dhisMessage( String message, String toID, String username, String toUser )
     {
         return "{\"subject\": \"Chatlog " + username + " / " + toUser + "\",\"text\": \"" + message + "\",\"users\": [{\"id\": \"" + toID + "\"}]}";
     }
