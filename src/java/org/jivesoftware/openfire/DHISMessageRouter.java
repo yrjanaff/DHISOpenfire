@@ -61,7 +61,6 @@ public class DHISMessageRouter
         "INSERT INTO ofdhisconversations VALUES (?, ?. ?)";
 
 
-
     public DHISMessageRouter( Message packet )
     {
         this.packet = packet;
@@ -108,28 +107,32 @@ public class DHISMessageRouter
         log.info( jsonBody );
 
         //Checking if conversation between the sender and reciever exist in db
-        log.info("checkConversation");
-        String location = checkConversation(toUser, username);
+        log.info( "checkConversation" );
+        String location = checkConversation( toUser, username );
         int conversationCode = -1;
-        if(location.equals("")){
-            log.info("location was not found on first try. Swapping usernames and checking again.");
-            location = checkConversation(username, toUser);
+        if ( location.equals( "" ) )
+        {
+            log.info( "location was not found on first try. Swapping usernames and checking again." );
+            location = checkConversation( username, toUser );
         }
-        log.info("checkConversation returned: " + location);
+        log.info( "checkConversation returned: " + location );
 
         //Checking if the conversation found in db still exist in DHIS
-        if(!location.equals("")){
-            log.info("Sjekker om conversation fortsatt finnes i DHIS");
+        if ( !location.equals( "" ) )
+        {
+            log.info( "Sjekker om conversation fortsatt finnes i DHIS" );
             HttpResponseObject dhisConversation = dhisHttpRequest( location, username, password, "GET", null );
-            log.info("DHIS sier at conversation er: " + dhisConversation.getCode());
-            if(dhisConversation.getCode() == 200){
+            log.info( "DHIS sier at conversation er: " + dhisConversation.getCode() );
+            if ( dhisConversation.getCode() == 200 )
+            {
                 conversationCode = 200;
-                log.info("saved conversationCode");
+                log.info( "saved conversationCode" );
             }
         }
 
-        if(conversationCode != 200){
-            log.info("ConversationCode was not 200, resetting location to messageConversations/");
+        if ( conversationCode != 200 )
+        {
+            log.info( "ConversationCode was not 200, resetting location to messageConversations/" );
             location = "messageConversations";
         }
 
@@ -140,14 +143,16 @@ public class DHISMessageRouter
         log.info( "Body: " + messageResponse.getBody() );
 
         //Set location of conversation in DB
-        if(location.equals("")){
+        if ( location.equals( "" ) )
+        {
             setConversation( username, toUser, messageResponse.getLocation() );
         }
 
     }
 
-    private void setConversation( String fromUser, String toUser, String location ){
-        log.info("Inni setLocation");
+    private void setConversation( String fromUser, String toUser, String location )
+    {
+        log.info( "Inni setLocation" );
 
         Connection con = null;
         PreparedStatement pstmt = null;
@@ -157,28 +162,31 @@ public class DHISMessageRouter
         {
             con = DbConnectionManager.getConnection();
             pstmt = con.prepareStatement( SET_LOCATION );
-            pstmt.setString( 1,  toUser);
+            pstmt.setString( 1, toUser );
             pstmt.setString( 2, fromUser );
             pstmt.setString( 3, location );
             rs = pstmt.executeQuery();
-            if( !rs.next() ){
-                log.info("mulig noe skjedde nå?");
+            if ( !rs.next() )
+            {
+                log.info( "mulig noe skjedde nå?" );
             }
-            log.info("Ser om rs skriver ut en insert etter insert: " + rs.getString( 1 ));
+            log.info( "Ser om rs skriver ut en insert etter insert: " + rs.getString( 1 ) );
         }
 
-        catch (SQLException sqle) {
-            log.info("SQLException.... : " + sqle.toString());
+        catch ( SQLException sqle )
+        {
+            log.info( "SQLException.... : " + sqle.toString() );
         }
-        finally {
-            DbConnectionManager.closeConnection(rs, pstmt, con);
+        finally
+        {
+            DbConnectionManager.closeConnection( rs, pstmt, con );
         }
-        log.info("Mulig det gikk å lagre location i db!");
+        log.info( "Mulig det gikk å lagre location i db!" );
     }
 
     private String checkConversation( String fromUser, String toUser )
     {
-        log.info("INNI ckeckConversation");
+        log.info( "INNI ckeckConversation" );
         Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -191,19 +199,22 @@ public class DHISMessageRouter
             pstmt.setString( 1, toUser );
             pstmt.setString( 2, fromUser );
             rs = pstmt.executeQuery();
-            if( !rs.next() ){
-                log.info("mulig noe skjedde nå?");
+            if ( !rs.next() )
+            {
+                log.info( "mulig noe skjedde nå?" );
             }
             location = rs.getString( 1 );
-            log.info("Skriver ut location for å være sikker: " + location);
+            log.info( "Skriver ut location for å være sikker: " + location );
         }
 
-        catch (SQLException sqle) {
-            log.info("SQLException.... : " + sqle.toString());
+        catch ( SQLException sqle )
+        {
+            log.info( "SQLException.... : " + sqle.toString() );
             location = "";
         }
-        finally {
-            DbConnectionManager.closeConnection(rs, pstmt, con);
+        finally
+        {
+            DbConnectionManager.closeConnection( rs, pstmt, con );
         }
         return location;
     }
@@ -254,7 +265,7 @@ public class DHISMessageRouter
                 os.write( jsonBody.getBytes() );
                 os.flush();
 
-                location = connection.getHeaderFields().get("Location").get(0);
+                location = connection.getHeaderFields().get( "Location" ).get( 0 );
             }
 
             log.info( "ÅPNET CONNECTION: url- " + url );
@@ -265,7 +276,7 @@ public class DHISMessageRouter
             hro = new HttpResponseObject( code, body, location );
             log.info( "CODE: " + code );
             log.info( "BODY: " + body );
-            log.info( "LOCATION: " + location);
+            log.info( "LOCATION: " + location );
         }
         catch ( SocketTimeoutException e )
         {

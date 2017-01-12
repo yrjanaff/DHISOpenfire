@@ -97,7 +97,7 @@ public class MessageRouter extends BasicModule
         log.info( "Body: " + packet.getBody() + " From: " + packet.getFrom() + " To: " + packet.getTo() );
         if ( packet.getBody() != null && packet.getFrom() != null && packet.getTo() != null )
         {
-            if(!packet.getFrom().toString().contains("@conference") && !packet.getTo().toString().contains("@conference"))
+            if ( !packet.getFrom().toString().contains( "@conference" ) && !packet.getTo().toString().contains( "@conference" ) )
             {
                 log.info( "sending packet to DHISMessageRouter" );
                 DHISMessageRouter dmr = new DHISMessageRouter( packet );
@@ -233,7 +233,7 @@ public class MessageRouter extends BasicModule
      * <b>xmpp.forward.admins</b>. The property may include bare JIDs or just usernames separated
      * by commas or white spaces. When using bare JIDs the target user may belong to a remote
      * server.<p>
-     *
+     * <p>
      * If the property <b>xmpp.forward.admins</b> was not defined then the message will be sent
      * to all the users allowed to enter the admin console.
      *
