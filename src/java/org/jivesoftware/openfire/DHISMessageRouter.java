@@ -104,7 +104,7 @@ public class DHISMessageRouter
         String jsonBody = dhisMessage( packet.getBody(), toID );
         log.info( jsonBody );
 
-        //Checking if conversation between the sender and reciever exist
+        //Checking if conversation between the sender and reciever exist in db
         log.info("checkConversation");
         String location = checkConversation(toUser, username);
         if(location.equals("")){
@@ -112,6 +112,13 @@ public class DHISMessageRouter
             location = checkConversation(username, toUser);
         }
         log.info("checkConversation returned: " + location);
+
+        //Checking if the conversation found in db still exist in DHIS
+        if(!location.equals("")){
+            log.info("Sjekker om conversation fortsatt finnes i DHIS");
+            HttpResonseObject dhisConversation = dhisHttpRequest( location, username, password, "GET", null );
+            log.info("DHIS sier at conversation er: " + dhisConversation.code());
+        }
 
         //Send message to DHIS 2
         log.info( "Sending message to DHIS2!" );
