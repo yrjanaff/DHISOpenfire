@@ -101,12 +101,13 @@ public class DHISMessageRouter
         log.info( toID );
 
         //Build message in JSON format to send to DHIS 2 server
-        String jsonBody = dhisMessage( packet.getBody(), toID );
+        String jsonBody = dhisMessage( packet.getBody(), toID, username, toUser );
         log.info( jsonBody );
 
         //Checking if conversation between the sender and reciever exist in db
         log.info("checkConversation");
         String location = checkConversation(toUser, username);
+        String conversationCode = -1;
         if(location.equals("")){
             log.info("location was not found on first try. Swapping usernames and checking again.");
             location = checkConversation(username, toUser);
@@ -118,11 +119,20 @@ public class DHISMessageRouter
             log.info("Sjekker om conversation fortsatt finnes i DHIS");
             HttpResponseObject dhisConversation = dhisHttpRequest( location, username, password, "GET", null );
             log.info("DHIS sier at conversation er: " + dhisConversation.getCode());
+            if(dhisConversation.getCode() == 200){
+                conversationCode = 200;
+                log.info("saved conversationCode");
+            }
+        }
+
+        if(conversationCode != 200){
+            log.info("ConversationCode was not 200, resetting location to messageConversations/");
+            location = "messageConversations";
         }
 
         //Send message to DHIS 2
         log.info( "Sending message to DHIS2!" );
-        HttpResponseObject messageResponse = dhisHttpRequest( "messageConversations", username, password, "POST", jsonBody );
+        HttpResponseObject messageResponse = dhisHttpRequest( location, username, password, "POST", jsonBody );
         log.info( "Message sent. ResponseCode: " + messageResponse.getCode() );
         log.info( "Body: " + messageResponse.getBody() );
 
@@ -162,10 +172,7 @@ public class DHISMessageRouter
 
     private String dhisMessage( String message, String toID )
     {
-        String subject = "\"subject\"";
-        String text = "text";
-        String users = "users";
-        return "{\"subject\": \" \",\"text\": \"" + message + "\",\"users\": [{\"id\": \"" + toID + "\"}]}";
+        return "{\"subject\": \"Chatlog " + username + " / " + toUser + "\",\"text\": \"" + message + "\",\"users\": [{\"id\": \"" + toID + "\"}]}";
     }
 
     private HttpResponseObject dhisHttpRequest( String urlE, String username, String password, String requestMethod, String jsonBody )
