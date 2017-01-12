@@ -10,7 +10,7 @@ public class HttpResponseObject
     String body;
     String location;
 
-    public HttpResponseObject( int code, String body, location )
+    public HttpResponseObject( int code, String body, String location )
     {
         this.code = code;
         this.body = body;
