@@ -7,10 +7,12 @@ package org.jivesoftware.openfire;
 public class HttpResponseObject{
 	int code;
 	String body;
+	String location;
 
-	public HttpResponseObject(int code, String body){
+	public HttpResponseObject(int code, String body, location){
 		this.code = code;
 		this.body = body;
+		this.location = location =;
 	}
 
 	public int getCode(){
@@ -20,4 +22,6 @@ public class HttpResponseObject{
 	public String getBody(){
 		return body;
 	}
+
+	public String getLocation() { return location; }
 }

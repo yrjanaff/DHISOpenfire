@@ -57,6 +57,9 @@ public class DHISMessageRouter
     private static final String GET_LOCATION =
         "SELECT location FROM ofdhisconversations WHERE firstuser=? AND seconduser=?";
 
+    private static final String SET_LOCATION =
+        "INSERT INTO ofdhisconversations VALUES (?, ?. ?)";
+
 
 
     public DHISMessageRouter( Message packet )
@@ -136,6 +139,41 @@ public class DHISMessageRouter
         log.info( "Message sent. ResponseCode: " + messageResponse.getCode() );
         log.info( "Body: " + messageResponse.getBody() );
 
+        //Set location of conversation in DB
+        if(location.equals("")){
+            setConversation( username, toUser, messageResponse.getLocation() );
+        }
+
+    }
+
+    private void setConversation( String fromUser, String toUser, String location ){
+        log.info("Inni setLocation");
+
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            con = DbConnectionManager.getConnection();
+            pstmt = con.prepareStatement( SET_LOCATION );
+            pstmt.setString( 1,  toUser);
+            pstmt.setString( 2, fromUser );
+            pstmt.setString( 3, location );
+            rs = pstmt.executeQuery();
+            if( !rs.next() ){
+                log.info("mulig noe skjedde nå?");
+            }
+            log.info("Ser om rs skriver ut en insert etter insert: " + rs.getString( 1 ));
+        }
+
+        catch (SQLException sqle) {
+            log.info("SQLException.... : " + sqle.toString());
+        }
+        finally {
+            DbConnectionManager.closeConnection(rs, pstmt, con);
+        }
+        log.info("Mulig det gikk å lagre location i db!");
     }
 
     private String checkConversation( String fromUser, String toUser )
@@ -224,7 +262,7 @@ public class DHISMessageRouter
             code = connection.getResponseCode();
             body = readInputStream( connection.getInputStream() );
 
-            hro = new HttpResponseObject( code, body );
+            hro = new HttpResponseObject( code, body, location );
             log.info( "CODE: " + code );
             log.info( "BODY: " + body );
             log.info( "LOCATION: " + location);
