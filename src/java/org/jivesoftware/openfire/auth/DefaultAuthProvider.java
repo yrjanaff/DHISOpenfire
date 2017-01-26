@@ -45,6 +45,8 @@ public class DefaultAuthProvider implements AuthProvider
     private String GROUP_NAME = "DHIS-TEST";
     private String GROUP_DESCRIPTION = "Test group for DHISMessenger";
     private String DOMAIN = "yj-dev.dhis2.org";
+
+    private String body = "";
     
     /*public DHISAuthProvider() {
          DhisURL = org.jivesoftware.util.LocaleUtils.getLocalizedString("dhis.server", "dhis_provider");
@@ -87,8 +89,14 @@ public class DefaultAuthProvider implements AuthProvider
             String email = username + "@" + DOMAIN;
             try
             {
+                String displayname = "";
                 Log.info( "try to create user" );
-                user = UserManager.getInstance().getUserProvider().createUser( username, password, nickname, null );
+                if(body != ""){
+                    Log.info("Body is full");
+                    displayname = setUserName(body);
+                    Log.info("displayname is: " + displayname);
+                }
+                user = UserManager.getInstance().getUserProvider().createUser( username, password, displayname, null );
                 if ( user == null )
                 {
                     Log.info( "User was null... Something went wrong in DHISUserProvider" );
@@ -180,7 +188,7 @@ public class DefaultAuthProvider implements AuthProvider
         String authStr = username + ":" + password;
         String authEncoded = Base64.encodeBytes( authStr.getBytes() );
         int code = -1;
-        String body = "";
+        //String body = "";
         Log.info( "DHISAuthProvider, loginToDhis: authStr: " + authStr + " authEncoded: " + authEncoded );
         acceptHost();
         HttpsURLConnection connection = null;
