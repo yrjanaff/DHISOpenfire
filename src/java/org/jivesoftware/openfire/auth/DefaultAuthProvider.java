@@ -93,7 +93,7 @@ public class DefaultAuthProvider implements AuthProvider
                 Log.info( "try to create user" );
                 if(body != ""){
                     Log.info("Body is full");
-                    displayname = setUserName(body);
+                    displayname = setUsername(body);
                     Log.info("displayname is: " + displayname);
                 }
                 user = UserManager.getInstance().getUserProvider().createUser( username, password, displayname, null );
