@@ -205,7 +205,7 @@ public class DHISMessageRouter
     }
 
     private String dhisMessage( String message ){
-        return "{\"text\": \"\" + message + \"}";
+        return message;
     }
 
     private HttpResponseObject dhisHttpRequest( String urlE, String username, String password, String requestMethod, String jsonBody )
