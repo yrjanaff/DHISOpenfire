@@ -74,6 +74,8 @@ public class DHISMessageRouter
         String toUser = "";
         String toPassword = "";
 
+        log.info(username);
+
         username = removeHostFromUsername( username );
         toUser = removeHostFromUsername( packet.getTo().toBareJID() );
 
@@ -203,7 +205,7 @@ public class DHISMessageRouter
 
     private HttpResponseObject dhisHttpRequest( String urlE, String username, String password, String requestMethod, String jsonBody )
     {
-        String dhisURL = "https://yj-dev.dhis2.org/dhis/api/";
+        String dhisURL = "https://play.dhis2.org/demo/api/";//"https://yj-dev.dhis2.org/dhis/api/";
         String authStr = username + ":" + password;
         String authEncoded = Base64.encodeBytes( authStr.getBytes() );
         String location = "";
