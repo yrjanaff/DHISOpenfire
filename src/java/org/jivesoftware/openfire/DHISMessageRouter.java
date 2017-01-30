@@ -117,6 +117,7 @@ public class DHISMessageRouter
             if ( dhisConversation.getCode() == 200 )
             {
                 conversationCode = 200;
+                jsonBody = dhisMessage(packet.getBody());
             }
         }
 
@@ -201,6 +202,10 @@ public class DHISMessageRouter
     private String dhisMessage( String message, String toID, String username, String toUser )
     {
         return "{\"subject\": \"Chatlog " + username + " / " + toUser + "\",\"text\": \"" + message + "\",\"users\": [{\"id\": \"" + toID + "\"}]}";
+    }
+
+    private String dhisMessage( String message ){
+        return "{\"text\": \"\" + message + \"}";
     }
 
     private HttpResponseObject dhisHttpRequest( String urlE, String username, String password, String requestMethod, String jsonBody )
