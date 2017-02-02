@@ -41,7 +41,7 @@ public class DefaultAuthProvider implements AuthProvider
     String nickname = "";
     String dhisId = "";
 
-    private String DhisURL = "https://play.dhis2.org/demo/api/";//"https://yj-dev.dhis2.org/dhis/api/me"; //"https://" + XMPPServer.getInstance().getServerInfo().getXMPPDomain() + "/hmis/api/me";
+    private String DhisURL = "https://yj-dev.dhis2.org/dhis/api/me"; //"https://" + XMPPServer.getInstance().getServerInfo().getXMPPDomain() + "/hmis/api/me";
     private String GROUP_NAME = "DHIS-TEST";
     private String GROUP_DESCRIPTION = "Test group for DHISMessenger";
     private String DOMAIN = "yj-dev.dhis2.org";
@@ -253,6 +253,7 @@ public class DefaultAuthProvider implements AuthProvider
 
     private String setUsername( String body )
     {
+        Log.info(body);
         try
         {
             JSONObject json = new JSONObject( body );
