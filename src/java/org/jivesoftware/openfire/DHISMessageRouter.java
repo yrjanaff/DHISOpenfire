@@ -113,11 +113,19 @@ public class DHISMessageRouter
         //Checking if the conversation found in db still exist in DHIS
         if ( !location.equals( "" ) )
         {
-            HttpResponseObject dhisConversation = dhisHttpRequest( location, username, password, "GET", null );
-            if ( dhisConversation.getCode() == 200 )
+            try
             {
-                conversationCode = 200;
-                jsonBody = dhisMessage(packet.getBody());
+                HttpResponseObject dhisConversation = dhisHttpRequest( location, username, password, "GET", null );
+                if ( dhisConversation.getCode() == 200 )
+                {
+                    conversationCode = 200;
+                    jsonBody = dhisMessage( packet.getBody() );
+                }
+            }
+            catch(Exception e){
+                log.info("exception når prøvde å finne conversation!!!");
+                log.info(e.toString());
+                conversationCode = -1;
             }
         }
 
