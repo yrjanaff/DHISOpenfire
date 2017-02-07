@@ -19,6 +19,11 @@ CREATE TABLE ofUser (
 );
 CREATE INDEX ofUser_cDate_idx ON ofUser (creationDate);
 
+CREATE TABLE ofDhisConversations (
+  firstuser             VARCHAR(64)     NOT NULL,
+  seconduser            VARCHAR(64)     NOT NULL,
+  location              VARCHAR(255)    NOT NULL
+);
 
 CREATE TABLE ofUserProp (
   username              VARCHAR(64)     NOT NULL,
