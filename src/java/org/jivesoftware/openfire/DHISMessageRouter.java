@@ -64,7 +64,7 @@ public class DHISMessageRouter
         "UPDATE ofdhismessagecounter SET count=count+1 WHERE username=?";
 
     private static final String ADD_COUNT =
-        "INSERT INTO ofdhismessagecounter VALUES (?, 0)";
+        "INSERT INTO ofdhismessagecounter VALUES (?, 1)";
 
     private static final String CHECK_COUNT =
         "SELECT username FROM ofdhismessagecounter WHERE username=?";
