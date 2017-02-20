@@ -184,6 +184,7 @@ public class DHISMessageRouter
         catch ( SQLException sqle )
         {
             log.info( "SQLException.... : " + sqle.toString() );
+            addNewCount(username);
         }
         finally
         {
