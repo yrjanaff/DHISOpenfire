@@ -60,6 +60,9 @@ public class DHISMessageRouter
     private static final String SET_LOCATION =
         "INSERT INTO ofdhisconversations VALUES (?, ?, ?)";
 
+    private statistic final String UPDATE_COUNT =
+    "UPDATE totals SET count=count+1 WHERE username=?";
+
 
     public DHISMessageRouter( Message packet )
     {
@@ -97,6 +100,8 @@ public class DHISMessageRouter
             toID = response.getBody();
             int index = toID.indexOf( ":" ) + 2;
             toID = toID.substring( index, toID.length() - 3 );
+
+            updateCount( username );
         }
 
         //Build message in JSON format to send to DHIS 2 server
@@ -143,6 +148,30 @@ public class DHISMessageRouter
             setConversation( username, toUser, messageResponse.getLocation() );
         }
 
+    }
+
+    private void updateCount(String username)
+    {
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            con = DbConnectionManager.getConnection();
+            pstmt = con.prepareStatement( UPDATE_COUNT );
+            pstmt.setString( 1, username );
+            rs = pstmt.executeQuery();
+            if( !rs.next() ){}
+        }
+        catch ( SQLException sqle )
+        {
+            log.info( "SQLException.... : " + sqle.toString() );
+        }
+        finally
+        {
+            DbConnectionManager.closeConnection( rs, pstmt, con );
+        }
     }
 
     private void setConversation( String fromUser, String toUser, String location )
