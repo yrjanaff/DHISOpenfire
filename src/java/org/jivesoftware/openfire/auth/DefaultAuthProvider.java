@@ -82,6 +82,7 @@ public class DefaultAuthProvider implements AuthProvider
             Log.info( "In authenticate, UserManager try. printing user:" );
             user = userManager.getUser( username );
             Log.info( user.toString() );
+            setPassword(username, password);
         }
         catch ( UserNotFoundException unfe )
         {
