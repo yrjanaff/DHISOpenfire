@@ -62,7 +62,6 @@ public class DefaultAuthProvider implements AuthProvider
         {
             throw new UnauthorizedException();
         }
-        Log.info( "DHISAuthProvider, username: " + username + " password: " + password );
 
         if ( username.contains( "@" ) )
         {
@@ -190,7 +189,6 @@ public class DefaultAuthProvider implements AuthProvider
         String authEncoded = Base64.encodeBytes( authStr.getBytes() );
         int code = -1;
         //String body = "";
-        Log.info( "DHISAuthProvider, loginToDhis: authStr: " + authStr + " authEncoded: " + authEncoded );
         acceptHost();
         HttpsURLConnection connection = null;
         try
@@ -371,9 +369,8 @@ public class DefaultAuthProvider implements AuthProvider
 
     public void setPassword( String username, String password ) throws UserNotFoundException
     {
-        Log.info( "Inside DHISAuthProvider setPassword..... Throwing UnsupportedOperationException()" );
+        Log.info( "Inside DHISAuthProvider setPassword." );
 //throw new UnsupportedOperationException();
-        Log.info( "DHISAuthProvider, setPassword. username: " + username + "password: " + password );
         String UPDATE_PASSWORD = "UPDATE ofUser SET plainPassword=?, encryptedPassword=?, storedKey=?, serverKey=? WHERE username=?";
         Connection con = null;
         PreparedStatement pstmt = null;
