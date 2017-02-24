@@ -384,7 +384,7 @@ public class DefaultAuthProvider implements AuthProvider
             }
             else
             {
-                pstmt.setString( 1, password );
+                pstmt.setString( 1, Types.VARCHAR );
             }
             //if (encryptedPassword == null) {
             pstmt.setNull( 2, Types.VARCHAR );
