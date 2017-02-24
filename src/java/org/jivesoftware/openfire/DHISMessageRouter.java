@@ -313,7 +313,7 @@ public class DHISMessageRouter
 
     private HttpResponseObject dhisHttpRequest( String urlE, String username, String password, String requestMethod, String jsonBody )
     {
-        String dhisURL = "https://197.243.37.125/hmis/api/";
+        String dhisURL = "https://yj-dev.dhis2.org/dhis/api/me";
         String authStr = username + ":" + password;
         String authEncoded = Base64.encodeBytes( authStr.getBytes() );
         String location = "";
