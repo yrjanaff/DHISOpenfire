@@ -98,11 +98,6 @@ public class DHISMessageRouter
             log.info( "UserNotfoundException....." );
         }
 
-        log.info("Skriver ut alt!");
-        log.info(username);
-        log.info(password);
-        log.info(toUser);
-        log.info(toPassword);
         //Get id of toUser
         HttpResponseObject response = dhisHttpRequest( "me?fields=id", toUser, toPassword, "GET", null );
         String toID = "";
