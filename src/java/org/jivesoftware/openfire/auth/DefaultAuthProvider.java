@@ -41,7 +41,7 @@ public class DefaultAuthProvider implements AuthProvider
     String nickname = "";
     String dhisId = "";
 
-    private String DhisURL = "https://yj-dev.dhis2.org/dhis/api/me"; //"https://197.243.37.125/hmis/api/me";//"https://" + XMPPServer.getInstance().getServerInfo().getXMPPDomain() + "/hmis/api/me";
+    private String DhisURL = "https://hmis.moh.gov.rw/hmis/api/me";//"https://yj-dev.dhis2.org/dhis/api/me"; //"https://197.243.37.125/hmis/api/me";//"https://" + XMPPServer.getInstance().getServerInfo().getXMPPDomain() + "/hmis/api/me";
     private String GROUP_NAME = "DHIS-TEST";
     private String GROUP_DESCRIPTION = "Test group for DHISMessenger";
     private String DOMAIN = "yj-dev.dhis2.org";
@@ -58,6 +58,8 @@ public class DefaultAuthProvider implements AuthProvider
     public void authenticate( String username, String password ) throws UnauthorizedException
     {
         Log.info( "Inside authenticate in DHISAuthProvider" );
+
+
         if ( username == null || password == null )
         {
             throw new UnauthorizedException();
@@ -69,6 +71,7 @@ public class DefaultAuthProvider implements AuthProvider
             username = username.substring( 0, index );
         }
 
+        if( username)
         if ( !loginToDhis( username, password ) )
         {
             throw new UnauthorizedException();
