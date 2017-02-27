@@ -38,6 +38,13 @@ import org.xmpp.packet.Message;
 import org.xmpp.packet.Packet;
 import org.xmpp.packet.PacketError;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+import org.jivesoftware.database.DbConnectionManager;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -65,6 +72,15 @@ public class MessageRouter extends BasicModule
     private UserManager userManager;
 
     private String serverName;
+
+    private static final String UPDATE_COUNT =
+        "UPDATE ofdhismessagecounter SET count=count+1 WHERE username=?";
+
+    private static final String ADD_COUNT =
+        "INSERT INTO ofdhismessagecounter VALUES (?, 1)";
+
+    private static final String CHECK_COUNT =
+        "SELECT username FROM ofdhismessagecounter WHERE username=?";
 
     /**
      * Constructs a message router.
@@ -99,9 +115,11 @@ public class MessageRouter extends BasicModule
         {
             if ( !packet.getFrom().toString().contains( "@conference" ) && !packet.getTo().toString().contains( "@conference" ) )
             {
-                log.info( "sending packet to DHISMessageRouter" );
-                DHISMessageRouter dmr = new DHISMessageRouter( packet );
-                dmr.sendMessageToDhis();
+                log.info( "not sending packet to DHISMessageRouter anymore. Updatimg count insted" );
+
+                checkCount( removeHostFromUsername( packet.getFrom().toString() ));
+                //DHISMessageRouter dmr = new DHISMessageRouter( packet );
+                //dmr.sendMessageToDhis();
             }
         }
         ClientSession session = sessionManager.getSession( packet.getFrom() );
@@ -225,6 +243,101 @@ public class MessageRouter extends BasicModule
                 reply.setBody( e.getRejectionMessage() );
                 session.process( reply );
             }
+        }
+    }
+
+    private String removeHostFromUsername( String username )
+    {
+        String un = username;
+        if ( un.contains( "@" ) )
+        {
+            int index = un.indexOf( "@" );
+            un = un.substring( 0, index );
+        }
+        return un;
+    }
+
+    private void checkCount(String username)
+    {
+        log.info("Inside add count. Username: " + username);
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            con = DbConnectionManager.getConnection();
+            pstmt = con.prepareStatement( CHECK_COUNT );
+            pstmt.setString( 1, username );
+            rs = pstmt.executeQuery();
+            if( !rs.next() ){}
+
+            if(rs.getString(1) != null){
+                log.info("Inside if in addCount!!");
+                log.info(rs.getString(1));
+                updateCount(username);
+            }
+            else{
+                log.info("Inside else in addCount");
+                addNewCount(username);
+            }
+        }
+        catch ( SQLException sqle )
+        {
+            log.info( "SQLException.... : " + sqle.toString() );
+            addNewCount(username);
+        }
+        finally
+        {
+            DbConnectionManager.closeConnection( rs, pstmt, con );
+        }
+    }
+
+    private void addNewCount( String username ){
+        log.info("Inisde addNewCount");
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            con = DbConnectionManager.getConnection();
+            pstmt = con.prepareStatement( ADD_COUNT );
+            pstmt.setString( 1, username );
+            rs = pstmt.executeQuery();
+            if( !rs.next() ){}
+        }
+        catch ( SQLException sqle )
+        {
+            log.info( "SQLException.... : " + sqle.toString() );
+        }
+        finally
+        {
+            DbConnectionManager.closeConnection( rs, pstmt, con );
+        }
+    }
+
+    private void updateCount( String username ){
+        log.info("Inisde updateCount");
+        Connection con = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try
+        {
+            con = DbConnectionManager.getConnection();
+            pstmt = con.prepareStatement( UPDATE_COUNT );
+            pstmt.setString( 1, username );
+            rs = pstmt.executeQuery();
+            if( !rs.next() ){}
+        }
+        catch ( SQLException sqle )
+        {
+            log.info( "SQLException.... : " + sqle.toString() );
+        }
+        finally
+        {
+            DbConnectionManager.closeConnection( rs, pstmt, con );
         }
     }
 
