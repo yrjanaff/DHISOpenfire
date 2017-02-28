@@ -71,7 +71,6 @@ public class DefaultAuthProvider implements AuthProvider
             username = username.substring( 0, index );
         }
 
-        if( username)
         if ( !loginToDhis( username, password ) )
         {
             throw new UnauthorizedException();
