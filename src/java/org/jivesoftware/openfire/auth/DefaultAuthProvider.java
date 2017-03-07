@@ -189,7 +189,7 @@ public class DefaultAuthProvider implements AuthProvider
         }
     }
 
-    public boolean loginToOldDhis( String name, String password ){
+    public boolean loginToOldDhis( String username, String password ){
         Log.info( "Trying to login to dhis.." );
         //String formatCredentials = String.format("%s:%s", username, password);
         //String bytesEncoded = Base64.encodeBytes(formatCredentials.getBytes());
